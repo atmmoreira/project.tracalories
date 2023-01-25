@@ -8,13 +8,9 @@ const ItemController = (function () {
     this.name = name;
     this.calories = calories;
   };
-
   // Data Structure / State
   const data = {
     items: [
-      { id: 0, name: 'Steack Dinner', calories: 1200 },
-      { id: 1, name: 'Cookie', calories: 200 },
-      { id: 2, name: 'Eggs', calories: 100 },
     ],
     currentItem: null,
     totalCalories: 0,
@@ -23,6 +19,23 @@ const ItemController = (function () {
   return {
     getItems: function () {
       return data.items;
+    },
+    addItem: function (name, calories) {
+      let ID;
+      // Create ID
+      if(data.items.length > 0) {
+        ID = data.items[data.items.length - 1].id + 1;
+      } else {
+        ID = 0;
+      }
+      // Calories to number
+      calories = parseInt(calories);
+      // Create new item
+      addNewItem = new Item(ID, name, calories);
+      // Add items array
+      data.items.push(addNewItem);
+
+      return addNewItem;
     },
     logData: function () {
       return data;
@@ -34,36 +47,87 @@ const ItemController = (function () {
 const UIController = (function () {
   const UISelectors = {
     itemList: '.item-list',
+    addButton: '.add-btn',
+    itemNameInput: '#item-name',
+    itemCaloriesInput: '#item-calories',
   };
-
   // Public Methods
   return {
     populateItemList: function (items) {
       let html = '';
       items.forEach((item) => {
         html += `
-          <li
-            class="list-group-item d-flex justify-content-between align-items-start"
-            id="item-${item.id}"
-          >
+          <li class="list-group-item d-flex justify-content-between align-items-start" id="item-${item.id}">
             <div class="ms-2 me-auto">
               <div class="fw-bold calories-name">${item.name}</div>
               <em>Calories: <small class="calories-info">${item.calories}</small></em>
             </div>
-            <a href="#" class="text-warning p-1 text-decoration-none edit-item" title="Edit">
-              <i class="ph-pencil-simple-bold"></i>
-            </a>
+            <a href="#" class="text-warning p-1 text-decoration-none edit-item" title="Edit"> <i class="ph-pencil-simple-bold"></i> </a>
           </li>
         `;
       });
       // Insert List items
       document.querySelector(UISelectors.itemList).innerHTML = html;
     },
+    addListItem: function(item) {
+      // Create li element
+      const li = document.createElement('li');
+      // Add classes
+      li.className = 'list-group-item d-flex justify-content-between align-items-start';
+      // Add ID
+      li.id = `item-${item.id}`;
+      li.innerHTML = `
+        <div class="ms-2 me-auto">
+          <div class="fw-bold calories-name">${item.name}</div>
+          <em>Calories: <small class="calories-info">${item.calories}</small></em>
+        </div>
+        <a href="#" class="text-warning p-1 text-decoration-none edit-item" title="Edit"> <i class="ph-pencil-simple-bold"></i> </a>
+      `;
+      // Insert item
+      document.querySelector(UISelectors.itemList).insertAdjacentElement('beforeend', li);
+    },
+    clearInputFields: function () {
+      document.querySelector(UISelectors.itemNameInput).value = '';
+      document.querySelector(UISelectors.itemCaloriesInput).value = '';
+    },
+    getSelectors: function () {
+      return UISelectors;
+    },
+    getItemInput: function () {
+      return {
+        name: document.querySelector(UISelectors.itemNameInput).value,
+        calories: document.querySelector(UISelectors.itemCaloriesInput).value,
+      };
+    },
   };
 })();
 
 // App Controller
 const AppController = (function (ItemController, UIController) {
+  // Load event listeners
+  const loadEventListeners = function () {
+    // Get UI Selectors
+    const UISelectors = UIController.getSelectors();
+    // Add item event
+    document
+      .querySelector(UISelectors.addButton)
+      .addEventListener('click', itemAddSubmit);
+  };
+  // Add item submit
+  const itemAddSubmit = function (event) {
+    // Get form input from Ui Controller
+    const input = UIController.getItemInput();
+    // Check for name and calories input
+    if (input.name !== '' && input.calories !== '') {
+      // Add item
+      const addNewItem = ItemController.addItem(input.name, input.calories);
+      // Add item to UI list
+      UIController.addListItem(addNewItem);
+      // Clear fields
+      UIController.clearInputFields();
+    }
+    event.preventDefault();
+  };
   // Public Methods
   return {
     init: function () {
@@ -71,6 +135,8 @@ const AppController = (function (ItemController, UIController) {
       const items = ItemController.getItems();
       // Populate list with items
       UIController.populateItemList(items);
+      // Load event listeners
+      loadEventListeners();
     },
   };
 })(ItemController, UIController);
