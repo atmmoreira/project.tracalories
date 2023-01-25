@@ -10,8 +10,7 @@ const ItemController = (function () {
   };
   // Data Structure / State
   const data = {
-    items: [
-    ],
+    items: [],
     currentItem: null,
     totalCalories: 0,
   };
