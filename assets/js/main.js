@@ -36,6 +36,17 @@ const ItemController = (function () {
 
       return addNewItem;
     },
+    getTotalCalories: function () {
+      let total = 0;
+      // Loop throught items and add cals
+      data.items.forEach(function (item) {
+        total += item.calories;
+      });
+      // Set total cal i data structure
+      data.totalCalories = total;
+      // Return total
+      return data.totalCalories;
+    },
     logData: function () {
       return data;
     },
@@ -49,6 +60,7 @@ const UIController = (function () {
     addButton: '.add-btn',
     itemNameInput: '#item-name',
     itemCaloriesInput: '#item-calories',
+    totalCalories: '.total-calories',
   };
   // Public Methods
   return {
@@ -92,6 +104,9 @@ const UIController = (function () {
     getSelectors: function () {
       return UISelectors;
     },
+    showTotalCalories: function (totalCalories) {
+      document.querySelector(UISelectors.totalCalories).textContent = totalCalories;
+    },
     getItemInput: function () {
       return {
         name: document.querySelector(UISelectors.itemNameInput).value,
@@ -122,6 +137,10 @@ const AppController = (function (ItemController, UIController) {
       const addNewItem = ItemController.addItem(input.name, input.calories);
       // Add item to UI list
       UIController.addListItem(addNewItem);
+      // Get total calories
+      const totalCalories = ItemController.getTotalCalories();
+      // Add total calories to UI
+      UIController.showTotalCalories(totalCalories);
       // Clear fields
       UIController.clearInputFields();
     }
@@ -134,6 +153,10 @@ const AppController = (function (ItemController, UIController) {
       const items = ItemController.getItems();
       // Populate list with items
       UIController.populateItemList(items);
+      // Get total calories
+      const totalCalories = ItemController.getTotalCalories();
+      // Add total calories to UI
+      UIController.showTotalCalories(totalCalories);
       // Load event listeners
       loadEventListeners();
     },
