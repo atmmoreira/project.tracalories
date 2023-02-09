@@ -22,7 +22,7 @@ const ItemController = (function () {
     addItem: function (name, calories) {
       let ID;
       // Create ID
-      if(data.items.length > 0) {
+      if (data.items.length > 0) {
         ID = data.items[data.items.length - 1].id + 1;
       } else {
         ID = 0;
@@ -35,6 +35,22 @@ const ItemController = (function () {
       data.items.push(addNewItem);
 
       return addNewItem;
+    },
+    getItemById: function (id) {
+      let found = null;
+      // Loop through items
+      data.items.forEach(function (item) {
+        if (item.id === id) {
+          found = item;
+        }
+      });
+      return found;
+    },
+    setCurrentitem: function (item) {
+      data.currentItem = item;
+    },
+    getCurrentItem: function () {
+      return data.currentItem;
     },
     getTotalCalories: function () {
       let total = 0;
@@ -58,6 +74,9 @@ const UIController = (function () {
   const UISelectors = {
     itemList: '.item-list',
     addButton: '.add-btn',
+    updateButton: '.update-btn',
+    deleteButton: '.delete-btn',
+    backButton: '.back-btn',
     itemNameInput: '#item-name',
     itemCaloriesInput: '#item-calories',
     totalCalories: '.total-calories',
@@ -80,11 +99,12 @@ const UIController = (function () {
       // Insert List items
       document.querySelector(UISelectors.itemList).innerHTML = html;
     },
-    addListItem: function(item) {
+    addListItem: function (item) {
       // Create li element
       const li = document.createElement('li');
       // Add classes
-      li.className = 'list-group-item d-flex justify-content-between align-items-start';
+      li.className =
+        'list-group-item d-flex justify-content-between align-items-start';
       // Add ID
       li.id = `item-${item.id}`;
       li.innerHTML = `
@@ -92,20 +112,41 @@ const UIController = (function () {
           <div class="fw-bold calories-name">${item.name}</div>
           <em>Calories: <small class="calories-info">${item.calories}</small></em>
         </div>
-        <a href="#" class="text-warning p-1 text-decoration-none edit-item" title="Edit"> <i class="ph-pencil-simple-bold"></i> </a>
+        <i class="ph-pencil-simple-bold text-warning edit-item"></i>
       `;
       // Insert item
-      document.querySelector(UISelectors.itemList).insertAdjacentElement('beforeend', li);
+      document
+        .querySelector(UISelectors.itemList)
+        .insertAdjacentElement('beforeend', li);
     },
     clearInputFields: function () {
       document.querySelector(UISelectors.itemNameInput).value = '';
       document.querySelector(UISelectors.itemCaloriesInput).value = '';
     },
+    addItemToForm: function () {
+      document.querySelector(UISelectors.itemNameInput).value = ItemController.getCurrentItem().name;
+      document.querySelector(UISelectors.itemCaloriesInput).value = ItemController.getCurrentItem().calories;
+      UIController.showEditState();
+    },
     getSelectors: function () {
       return UISelectors;
     },
     showTotalCalories: function (totalCalories) {
-      document.querySelector(UISelectors.totalCalories).textContent = totalCalories;
+      document.querySelector(UISelectors.totalCalories).textContent =
+        totalCalories;
+    },
+    clearEditState: function () {
+      UIController.clearInputFields();
+      document.querySelector(UISelectors.updateButton).style.display = 'none';
+      document.querySelector(UISelectors.deleteButton).style.display = 'none';
+      document.querySelector(UISelectors.backButton).style.display = 'none';
+      document.querySelector(UISelectors.addButton).style.display = 'inline';
+    },
+    showEditState: function () {
+      document.querySelector(UISelectors.updateButton).style.display = 'inline';
+      document.querySelector(UISelectors.deleteButton).style.display = 'inline';
+      document.querySelector(UISelectors.backButton).style.display = 'inline';
+      document.querySelector(UISelectors.addButton).style.display = 'none';
     },
     getItemInput: function () {
       return {
@@ -126,6 +167,10 @@ const AppController = (function (ItemController, UIController) {
     document
       .querySelector(UISelectors.addButton)
       .addEventListener('click', itemAddSubmit);
+    // Edit icon event
+    document
+      .querySelector(UISelectors.itemList)
+      .addEventListener('click', itemUpdateSubmit);
   };
   // Add item submit
   const itemAddSubmit = function (event) {
@@ -146,9 +191,29 @@ const AppController = (function (ItemController, UIController) {
     }
     event.preventDefault();
   };
+  // Update item submit
+  const itemUpdateSubmit = function (event) {
+    if (event.target.classList.contains('edit-item')) {
+      // Get list item id
+      const listId = event.target.parentNode.id;
+      // Break into array
+      const listIdArr = listId.split('-');
+      // Get the actual id
+      const id = parseInt(listIdArr[1]);
+      // Get item
+      const itemToEdit = ItemController.getItemById(id);
+      // Set current item
+      ItemController.setCurrentitem(itemToEdit);
+      // Add item to form
+      UIController.addItemToForm();
+    }
+    event.preventDefault();
+  };
   // Public Methods
   return {
     init: function () {
+      // Clear edit state / se initial set
+      UIController.clearEditState();
       // Fetch items from data structure
       const items = ItemController.getItems();
       // Populate list with items
