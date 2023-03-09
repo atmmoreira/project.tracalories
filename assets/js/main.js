@@ -1,4 +1,35 @@
 // Storage Controller
+const StorageController = (function () {
+  return {
+    storeItem: function (item) {
+      let items = [];
+      // Check if any items in localStorage
+      if (localStorage.getItem('items') === null) {
+        items = [];
+        // Push new item
+        items.push(item);
+        // Set localStorage
+        localStorage.setItem('items', JSON.stringify(items));
+      } else {
+        // Get what is already in localStorage
+        items = JSON.parse(localStorage.getItem('items'));
+        // Push the new item
+        items.push(item);
+        // Reset localStorage
+        localStorage.setItem('items', JSON.stringify(items));
+      }
+    },
+    getItemsFromStorage: function () {
+      let items;
+      if (localStorage.getItem('items') === null) {
+        items = [];
+      } else {
+        items = JSON.parse(localStorage.getItem('items'));
+      }
+      return items;
+    },
+  }
+})();
 
 // Item Controller
 const ItemController = (function () {
@@ -10,7 +41,7 @@ const ItemController = (function () {
   };
   // Data Structure / State
   const data = {
-    items: [],
+    items: StorageController.getItemsFromStorage(),
     currentItem: null,
     totalCalories: 0,
   };
@@ -220,7 +251,7 @@ const UIController = (function () {
 })();
 
 // App Controller
-const AppController = (function (ItemController, UIController) {
+const AppController = (function (ItemController, StorageController, UIController) {
   // Load event listeners
   const loadEventListeners = function () {
     // Get UI Selectors
@@ -271,6 +302,8 @@ const AppController = (function (ItemController, UIController) {
       const totalCalories = ItemController.getTotalCalories();
       // Add total calories to UI
       UIController.showTotalCalories(totalCalories);
+      // Store in locanStorage
+      StorageController.storeItem(addNewItem);
       // Clear fields
       UIController.clearInputFields();
     }
@@ -354,7 +387,7 @@ const AppController = (function (ItemController, UIController) {
       loadEventListeners();
     },
   };
-})(ItemController, UIController);
+})(ItemController, StorageController, UIController);
 
 // Initialize App
 AppController.init();
