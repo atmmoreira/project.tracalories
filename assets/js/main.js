@@ -28,6 +28,26 @@ const StorageController = (function () {
       }
       return items;
     },
+    updateItemStorage: function (updateItem) {
+      let items = JSON.parse(localStorage.getItem('items'));
+
+      items.forEach(function (item, index) {
+        if (updateItem.id === item.id) {
+          items.splice(index, 1, updateItem);
+        }
+      });
+      localStorage.setItem('items', JSON.stringify(items));
+    },
+    deleteItemFromStorage: function (id) {
+      let items = JSON.parse(localStorage.getItem('items'));
+
+      items.forEach(function (item, index) {
+        if (id === item.id) {
+          items.splice(index, 1);
+        }
+      });
+      localStorage.setItem('items', JSON.stringify(items));
+    }
   }
 })();
 
@@ -152,7 +172,7 @@ const UIController = (function () {
               <div class="fw-bold calories-name">${item.name}</div>
               <em>Calories: <small class="calories-info">${item.calories}</small></em>
             </div>
-            <a href="#" class="text-warning p-1 text-decoration-none edit-item" title="Edit"> <i class="ph-pencil-simple-bold"></i> </a>
+            <i class="ph-pencil-simple-bold text-warning edit-item"></i>
           </li>
         `;
       });
@@ -220,7 +240,6 @@ const UIController = (function () {
       listItems.forEach(function (item) {
         item.remove();
       });
-
     },
     getSelectors: function () {
       return UISelectors;
@@ -339,6 +358,8 @@ const AppController = (function (ItemController, StorageController, UIController
     const totalCalories = ItemController.getTotalCalories();
     // Add total calories to UI
     UIController.showTotalCalories(totalCalories);
+    // Update local storage
+    StorageController.updateItemStorage(updateItem);
     // Clear inputs
     UIController.clearEditState();
     event.preventDefault();
@@ -355,6 +376,8 @@ const AppController = (function (ItemController, StorageController, UIController
     const totalCalories = ItemController.getTotalCalories();
     // Add total calories to UI
     UIController.showTotalCalories(totalCalories);
+    // Delete from localStorage
+    StorageController.deleteItemFromStorage(currentItem.id);
     // Clear UI list
     UIController.clearEditState();
     event.preventDefault();
