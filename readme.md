@@ -17,10 +17,16 @@
 ## Description
 Example of CRUD using localstorage with vanilla javascript, html5, css3 and bootstrap.
 
-## Screens Layout
+## Old Layout
 
 <div align="center">
   <img src="readme/layout/tracalories.jpg" alt="Login"/>
+</div>
+
+## New Layout
+
+<div align="center">
+  <img src="readme/layout/new-layout.jpg" alt="Login"/>
 </div>
 
 ## Programming Languages and Frameworks.
@@ -28,6 +34,7 @@ Example of CRUD using localstorage with vanilla javascript, html5, css3 and boot
 # Bootstrap 5.2
 # HTML5 / CSS3 / SASS
 # Javascript
+# OOP
 ```
 
 ## System Requirements
@@ -44,4 +51,8 @@ Example of CRUD using localstorage with vanilla javascript, html5, css3 and boot
 # If you have the extension `Live Server` installed.
 # Click on the file index.html with right button in yor mouse, and select `Open with Live server`
 # If NOT, you just open the file index.html in your favorite browser.
+
+--------
+# To see the new layout and code, please change for branch 'feature/new-layout'.
+
 ```
