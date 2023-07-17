@@ -23,11 +23,21 @@ Example of CRUD using localstorage with vanilla javascript, html5, css3 and boot
   <img src="readme/layout/tracalories.jpg" alt="Login"/>
 </div>
 
-## New Layout
+## New Layout and Project Diagram
 
 <div align="center">
-  <img src="readme/layout/new-layout.jpg" alt="Login"/>
+  <img src="readme/layout/new-layout.jpg" alt="New Layout"/>
 </div>
+
+<br>
+
+### Project Diagram
+
+<div align="center">
+  <img src="readme/layout/project_diagram.png" alt="Project Diagram"/>
+</div>
+
+<br>
 
 ## Programming Languages and Frameworks.
 ```Bash
