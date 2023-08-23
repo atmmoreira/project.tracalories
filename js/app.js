@@ -17,12 +17,14 @@ class CalorieTracker {
   addMeal(meal) {
     this._meals.push(meal);
     this._totalCalories += meal.calories;
+    this._displayNewMeal(meal);
     this._render();
   }
 
   addWorkout(workout) {
     this._workouts.push(workout);
     this._totalCalories -= workout.calories;
+    this._displayNewWorkout(workout);
     this._render();
   }
 
@@ -39,19 +41,13 @@ class CalorieTracker {
 
   _displayCaloriesConsumed() {
     const caloriesConsumedEl = document.getElementById('calories-consumed');
-    const consumed = this._meals.reduce(
-      (total, meal) => total + meal.calories,
-      0
-    );
+    const consumed = this._meals.reduce( (total, meal) => total + meal.calories, 0 );
     caloriesConsumedEl.innerHTML = consumed;
   }
 
   _displayCaloriesBurned() {
     const caloriesBurnedEl = document.getElementById('calories-burned');
-    const burned = this._workouts.reduce(
-      (total, workout) => total + workout.calories,
-      0
-    );
+    const burned = this._workouts.reduce( (total, workout) => total + workout.calories, 0 );
     caloriesBurnedEl.innerHTML = burned;
   }
 
@@ -62,18 +58,12 @@ class CalorieTracker {
     caloriesRemainingEl.innerHTML = remaining;
 
     if (remaining <= 0) {
-      caloriesRemainingEl.parentElement.parentElement.classList.remove(
-        'bg-light'
-      );
-      caloriesRemainingEl.parentElement.parentElement.classList.add(
-        'bg-danger'
-      );
+      caloriesRemainingEl.parentElement.parentElement.classList.remove( 'bg-light' );
+      caloriesRemainingEl.parentElement.parentElement.classList.add( 'bg-danger' );
       progressEl.classList.remove('bg-success');
       progressEl.classList.add('bg-danger');
     } else {
-      caloriesRemainingEl.parentElement.parentElement.classList.remove(
-        'bg-danger'
-      );
+      caloriesRemainingEl.parentElement.parentElement.classList.remove( 'bg-danger' );
       caloriesRemainingEl.parentElement.parentElement.classList.add('bg-light');
       progressEl.classList.remove('bg-danger');
       progressEl.classList.add('bg-success');
@@ -85,6 +75,36 @@ class CalorieTracker {
     const percentage = (this._totalCalories / this._calorieLimit) * 100;
     const width = Math.min(percentage, 100);
     progressEl.style.width = `${width}%`;
+  }
+
+  _displayNewMeal(meal) {
+    const mealsEl = document.getElementById('meal-items');
+    const mealEl = document.createElement('li');
+    mealEl.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
+    mealEl.setAttribute('data-id', meal.id);
+    mealEl.innerHTML = `
+      <div class="ms-2 me-auto">
+        <div class="fw-bold">${meal.name}</div>
+        <small class="bg-primary text-white text-center rounded-pill py-1 px-2 px-sm-3">${meal.calories} ${meal.calories > 1 ? 'Calories' : 'Calorie'}</small>
+      </div>
+      <span class="delete badge bg-danger">Delete</span>
+    `;
+    mealsEl.appendChild(mealEl)
+  }
+
+  _displayNewWorkout(workout) {
+    const workoutsEl = document.getElementById('workout-items');
+    const workoutEl = document.createElement('li');
+    workoutEl.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
+    workoutEl.setAttribute('data-id', workout.id);
+    workoutEl.innerHTML = `
+      <div class="ms-2 me-auto">
+        <div class="fw-bold">${workout.name}</div>
+        <small class="bg-primary text-white text-center rounded-pill py-1 px-2 px-sm-3">${workout.calories} ${workout.calories > 1 ? 'Calories' : 'Calorie'}</small>
+      </div>
+      <span class="delete badge bg-danger">Delete</span>
+    `;
+    workoutsEl.appendChild(workoutEl)
   }
 
   _render() {
