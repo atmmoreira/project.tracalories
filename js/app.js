@@ -1,6 +1,6 @@
 class CalorieTracker {
   constructor() {
-    this._calorieLimit = 2000;
+    this._calorieLimit = Storage.getCalorieLimit();
     this._totalCalories = 0;
     this._meals = [];
     this._workouts = [];
@@ -54,6 +54,13 @@ class CalorieTracker {
     this._totalCalories = 0;
     this._meals = [];
     this._workouts = [];
+    this._render();
+  }
+
+  setLimit(calorieLimit) {
+    this._calorieLimit = calorieLimit;
+    Storage.setCalorieLimit(calorieLimit);
+    this._displayCaloriesLimit();
     this._render();
   }
 
@@ -161,6 +168,22 @@ class Workout {
   }
 }
 
+class Storage {
+  static getCalorieLimit(defaultLimit = 2000) {
+    let calorieLimit;
+    if(localStorage.getItem('calorieLimit') === null) {
+      calorieLimit = defaultLimit;
+    } else {
+      calorieLimit = +localStorage.getItem('calorieLimit');
+    }
+    return calorieLimit;
+  }
+
+  static setCalorieLimit(calorieLimit) {
+   localStorage.setItem('calorieLimit', calorieLimit);
+  }
+}
+
 class App {
   constructor() {
     this._tracker = new CalorieTracker();
@@ -192,6 +215,10 @@ class App {
     document
       .getElementById('reset')
       .addEventListener('click', this._reset.bind(this));
+
+    document
+      .getElementById('limit-form')
+      .addEventListener('submit', this._setLimit.bind(this));
   }
 
   _newItem(type, e) {
@@ -225,7 +252,7 @@ class App {
 
   _removeItem(type, e) {
     if( e.target.classList.contains('delete') ) {
-      if (confirm('Tem certeza?')) {
+      if (confirm('Are you sure?')) {
         const id = e.target.closest('.list-group-item').getAttribute('data-id');
 
         type === 'meal'
@@ -258,6 +285,22 @@ class App {
     document.getElementById('workout-items').innerHTML = '';
     document.getElementById('filter-meals').value = '';
     document.getElementById('workout-meals').value = '';
+  }
+
+  _setLimit(e) {
+    e.preventDefault();
+    const limit = document.getElementById('limit');
+
+    if(limit.value === '') {
+      alert('Please add a limit');
+      return;
+    }
+    this._tracker.setLimit(+limit.value);
+    limit.value = '';
+
+    const modalEl = document.getElementById('limit-modal');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    modal.hide();
   }
 
   // End of class App
