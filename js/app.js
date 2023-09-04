@@ -11,6 +11,8 @@ class CalorieTracker {
     this._displayCaloriesBurned();
     this._displayCaloriesRemaining();
     this._displayCaloriesProgress();
+
+    document.getElementById('limit').value = this._calorieLimit;
   }
 
   // Public Methods/Api //
@@ -62,6 +64,7 @@ class CalorieTracker {
     this._totalCalories = 0;
     this._meals = [];
     this._workouts = [];
+    Storage.clearAll();
     this._render();
   }
 
@@ -261,6 +264,10 @@ class Storage {
     });
     localStorage.setItem('workouts', JSON.stringify(workouts));
   }
+
+  static clearAll() {
+    localStorage.clear();
+  }
 }
 
 class App {
@@ -367,7 +374,7 @@ class App {
     document.getElementById('meal-items').innerHTML = '';
     document.getElementById('workout-items').innerHTML = '';
     document.getElementById('filter-meals').value = '';
-    document.getElementById('workout-meals').value = '';
+    document.getElementById('filter-workouts').value = '';
   }
 
   _setLimit(e) {
