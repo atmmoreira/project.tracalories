@@ -2,20 +2,18 @@
   <img src="readme/logo/favicon.png" />
   <h1>Anderson Toledo Martins Moreira</h1>
   <h4>
-    Frontend Software Developer » Salesforce Administrator & Developer <br />
-    <a href="http://www.atmm.dev" target="_blank">Resume Online</a> -
-    <a href="https://www.linkedin.com/in/atmmoreira" target="_blank">Linkedin</a> -
-    <a href="https://trailblazer.me/id/atmmdev" target="_blank">Trailblazer</a>
+    Frontend Software Engineer II <br />
+    <a href="http://www.atmm.dev" target="_blank">Resume Online</a>
   </h4>
 </div>
 
 <!-- References for Create budgets :: https://shields.io/category/build -->
 <div align="center">
-  <img src="https://img.shields.io/static/v1?label=STATUS&message=complete&color=blue&style=for-the-badge"/> <img src="https://img.shields.io/static/v1?label=Javascript&message=ES6*&color=yellow&style=for-the-badge"/> <img src="https://img.shields.io/static/v1?label=Bootstrap&message=5.1.3&color=green&style=for-the-badge"/> <img src="https://img.shields.io/static/v1?label=SASS&message=1.45.1&color=pink&style=for-the-badge"/>
+  <img src="https://img.shields.io/static/v1?label=Javascript&message=ES6*&color=yellow&style=for-the-badge"/> <img src="https://img.shields.io/static/v1?label=Bootstrap&message=5.2&color=green&style=for-the-badge"/> <img src="https://img.shields.io/static/v1?label=SASS&message=1.45.1&color=pink&style=for-the-badge"/> <img src="https://img.shields.io/static/v1?label=Webpack&message=5.88.2&color=red&style=for-the-badge"/>
 </div>
 
 ## Description
-Example of CRUD using localstorage with vanilla javascript, html5, css3 and bootstrap.
+App to track calories, meals and workouts. CRUD using localStorage with webpack, javascript vanilla, html5, css3 and bootstrap.
 
 ## Old Layout
 
