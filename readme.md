@@ -13,7 +13,7 @@
 </div>
 
 ## Description
-App to track calories, meals and workouts. CRUD using localStorage with webpack, javascript vanilla, html5, css3 and bootstrap.
+Project created with JavaScript Vanilla, with the goals to improve skills in Object-oriented programming (OOP). App to track calories, meals and workouts. CRUD using localStorage with Webpack, JavaScript Vanilla, HTML5, CSS3 and Bootstrap.
 
 ## Old Layout
 
